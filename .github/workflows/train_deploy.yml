@@ -29,7 +29,15 @@ jobs:
       with:
           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
     
-   
+    
+   # Submit a training run to the Azure Machine Learning
+    - name: Submit training run
+      id: aml_run
+      uses: Azure/aml-run@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+
+    
    # Tensorboard
     - name: cml_run    
       env:
@@ -41,14 +49,7 @@ jobs:
           cml-tensorboard-dev --logdir logs --md --name "Go to tensorboard" >> report.md
           cml-send-comment report.md
           python train.py
-   
-   # Submit a training run to the Azure Machine Learning
-    - name: Submit training run
-      id: aml_run
-      uses: Azure/aml-run@v1
-      with:
-          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
-
+    
     # Register model in Azure Machine Learning model registry
     - name: Register model
       id: aml_registermodel
